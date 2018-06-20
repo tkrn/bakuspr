@@ -10,6 +10,7 @@ After the color file is loaded, proceed to loading a sprite file (GR\\*.spr). On
 
 #### Download
 
+Please download a Windows .NET 4.0 compiled binary at https://github.com/tkrn/bakuspr/releases/latest 
 
 #### Screenshots
 
@@ -22,3 +23,8 @@ Thanks to xdaniel on The Cutting Room Floor (tcrf.net) message boards to help re
 This game orignally requires 256 colors (8-bit) and having the sprite file is merely not enough. A palette file is required for correct color output. There are two type of known Baku Baku PC palette files. One with "VS" in the filename and another one without "VS" inn the filename. The files with "VS" are 32 color palette files. The files without "VS" in the name are 112 color palette files.
 
 There is still a missing piece of the displaying all the sprites correctly and it's in the GAME.FIX files which primarily pertain to the GAME.SPR file (needs confirmation) but the graphics become scrambled towards the end of the GAME.SPR file.
+
+#### Acknowledgements
+
+* Thanks to Chris Johanson at Twin Rose Software for his contributions to MemoryBox. See http://www.twinrose.net
+* Thanks to Nguyen.H.H.Dang for the base implementation of the Thumbnail Viewer Control. See https://www.codeproject.com/tips/792957/a-simple-thumbnail-viewer-control
