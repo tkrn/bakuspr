@@ -26,5 +26,6 @@ There is still a missing piece of the displaying all the sprites correctly and i
 
 #### Acknowledgements
 
+* Thanks to xdaniel on the tcrf.net message boards
 * Thanks to Chris Johanson at Twin Rose Software for his contributions to MemoryBox. See http://www.twinrose.net
 * Thanks to Nguyen.H.H.Dang for the base implementation of the Thumbnail Viewer Control. See https://www.codeproject.com/tips/792957/a-simple-thumbnail-viewer-control
