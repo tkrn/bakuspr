@@ -1,6 +1,6 @@
 ﻿//    bakuspr - A utility to extract sprites from Baku Baku Animal for PC
 //
-//    Copyright (C) 2018 tkrn
+//    Copyright (C) 2018-2019 tkrn
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by

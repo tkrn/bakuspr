@@ -1,6 +1,6 @@
 ﻿//    bakuspr - A utility to extract sprites from Baku Baku Animal for PC
 //
-//    Copyright (C) 2018 tkrn
+//    Copyright (C) 2018-2019 tkrn
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ namespace bakuspr
     public partial class frmMain : Form
     {
         Color[] CurrentPalette;
+
+        String WndTitle = "bakuspr by tkrn";
       
         public frmMain()
         {
@@ -47,6 +49,7 @@ namespace bakuspr
         {
             if (ofdSprite.ShowDialog() == DialogResult.OK)
             {
+                this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
                 tbViewer.Clear();
                 btnSave.Enabled = false;
                 bgLoadSprite.RunWorkerAsync();
@@ -56,8 +59,14 @@ namespace bakuspr
         private void rbWin95Default_CheckedChanged(object sender, EventArgs e)
         {
             btnImport.Enabled = false;
+            tbViewer.Clear();
             lblCustomPaletteFilename.Text = null;
             bgLoadPalette.RunWorkerAsync();
+
+            if (File.Exists(ofdSprite.FileName))
+            {
+                bgLoadSprite.RunWorkerAsync();
+            }
         }
 
         private void rbCustom_CheckedChanged(object sender, EventArgs e)
@@ -70,7 +79,13 @@ namespace bakuspr
             if (ofdPalette.ShowDialog() == DialogResult.OK)
             {
                 lblCustomPaletteFilename.Text = ofdPalette.SafeFileName;
+                tbViewer.Clear();
                 bgLoadPalette.RunWorkerAsync();
+
+                if (File.Exists(ofdSprite.FileName))
+                {
+                    bgLoadSprite.RunWorkerAsync();
+                }
             }
         }
 

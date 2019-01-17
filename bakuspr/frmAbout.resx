@@ -122,7 +122,7 @@
 
 This game orignally requires 256 colors (8-bit) and having the sprite file is merely not enough. A palette file is required for correct color output. There are two type of known Baku Baku PC palette files. One with "VS" in the filename and another one without "VS" inn the filename. The files with "VS" are 32 color palette files. The files without "VS" in the name are 112 color palette files.
 
-There is still a missing piece of the displaying all the sprites correctly and it's in the GAME.FIX files which primarily pertain to the GAME.SPR file (needs confirmation) but the graphics become scrambled towards the end of the GAME.SPR file.
+There is still a missing piece of the displaying all the sprites correctly and it's in the GAME.FIX file. After fixing a datatype conversion on images that have dimensions larger than 255 pixels, height or width, it's clear that the GAME.FIX file is likely palette file.
 
 --- Acknowledgements ---
 

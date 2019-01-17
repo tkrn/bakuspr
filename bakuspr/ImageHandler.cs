@@ -1,6 +1,6 @@
 ﻿//    bakuspr - A utility to extract sprites from Baku Baku Animal for PC
 //
-//    Copyright (C) 2018 tkrn
+//    Copyright (C) 2018-2019 tkrn
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -314,8 +315,12 @@ namespace bakuspr
                 int g = i + 1;
                 int b = i;
 
-                colorPalette[ii] = Color.FromArgb(0, sender[r], sender[g], sender[b]);
-                ii++;
+                if (ii < 256) 
+                {
+                    colorPalette[ii] = Color.FromArgb(0, sender[r], sender[g], sender[b]);
+                    ii++;
+                }
+                
             }
 
             colorPalette[246] = Color.FromArgb(255, 255, 251, 240);
@@ -355,13 +360,13 @@ namespace bakuspr
             // define variables
             bool headerFound = false;
             decimal imageLength = 0;
-            decimal decWidth = 0;
-            decimal decHeight = 0;
+            ushort intWidth = 0;
+            ushort intHeight = 0;
             int imageNumber = 0;
             int currentImageIterator = 0;
             int dimensionIterator = 0;
-            byte[] hexWidth = new byte[2];
-            byte[] hexHeight = new byte[2];
+            short[] hexWidth = new short[2];
+            short[] hexHeight = new short[2];
             List<byte> currentImageBuffer = new List<byte>();
             List<SprItem> currentSprList = new List<SprItem>();
 
@@ -375,8 +380,8 @@ namespace bakuspr
                     if (currentImageIterator == imageLength)
                     {
                         Bitmap bmp = MakeBitmap(currentImageBuffer.ToArray(),
-                            (int)decWidth,
-                            (int)decHeight,
+                            intWidth,
+                            intHeight,
                             colorPalette
                         );
 
@@ -402,14 +407,17 @@ namespace bakuspr
                         currentImageIterator = 0;
                         dimensionIterator = 0;
                         headerFound = false;
-                        decWidth = 0;
-                        decHeight = 0;
-                        hexWidth = new byte[2];
-                        hexHeight = new byte[2];
+                        intWidth = 0;
+                        intHeight = 0;
+                        hexWidth = new short[2];
+                        hexHeight = new short[2];
                     }
                 }
                 else
                 {
+                    if (imageNumber == 302 ) { //Debugger.Break();
+                    }
+
                     // reading in the sprite dimensions from the header portion of the payload
                     switch (dimensionIterator)
                     {
@@ -437,11 +445,12 @@ namespace bakuspr
                     {
                         headerFound = true;
                         imageNumber++;
-                        imageLength = GetDecimalDimension(hexWidth) * GetDecimalDimension(hexHeight);
-
+                        
                         // get sizing
-                        decWidth = GetDecimalDimension(hexWidth);
-                        decHeight = GetDecimalDimension(hexHeight);
+                        intWidth = GetIntDimension(hexWidth);
+                        intHeight = GetIntDimension(hexHeight);
+
+                        imageLength = GetIntDimension(hexWidth) * GetIntDimension(hexHeight);
                     }
 
                 }
@@ -450,9 +459,12 @@ namespace bakuspr
             return currentSprList.ToArray();
         }
 
-        private static decimal GetDecimalDimension(byte[] input)
+        private static ushort GetIntDimension(short[] input)
         {
-            return (decimal)(input[0] | input[1]);
+            string part1 = input[0].ToString("X");
+            string part2 = input[1].ToString("X");
+            string s = string.Format("{0}{1}", part1, part2);
+            return (ushort)Convert.ToInt16(s, 16);
         }
     }
 }
