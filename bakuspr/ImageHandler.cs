@@ -415,9 +415,6 @@ namespace bakuspr
                 }
                 else
                 {
-                    if (imageNumber == 302 ) { //Debugger.Break();
-                    }
-
                     // reading in the sprite dimensions from the header portion of the payload
                     switch (dimensionIterator)
                     {
@@ -461,8 +458,8 @@ namespace bakuspr
 
         private static ushort GetIntDimension(short[] input)
         {
-            string part1 = input[0].ToString("X");
-            string part2 = input[1].ToString("X");
+            string part1 = input[0].ToString("X2");
+            string part2 = input[1].ToString("X2");
             string s = string.Format("{0}{1}", part1, part2);
             return (ushort)Convert.ToInt16(s, 16);
         }

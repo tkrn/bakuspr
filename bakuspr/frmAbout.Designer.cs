@@ -44,7 +44,7 @@
             // 
             this.picAbout.Image = global::bakuspr.Properties.Resources.bakubakulogo;
             this.picAbout.Location = new System.Drawing.Point(10, 11);
-            this.picAbout.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.picAbout.Margin = new System.Windows.Forms.Padding(2);
             this.picAbout.Name = "picAbout";
             this.picAbout.Size = new System.Drawing.Size(159, 117);
             this.picAbout.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -88,9 +88,9 @@
             this.lblVersion.Location = new System.Drawing.Point(173, 78);
             this.lblVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(60, 13);
+            this.lblVersion.Size = new System.Drawing.Size(42, 13);
             this.lblVersion.TabIndex = 4;
-            this.lblVersion.Text = "Version 1.1";
+            this.lblVersion.Text = "Version";
             // 
             // lblBuiltOn
             // 
@@ -106,7 +106,7 @@
             // 
             this.richTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextbox.Location = new System.Drawing.Point(10, 132);
-            this.richTextbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.richTextbox.Margin = new System.Windows.Forms.Padding(2);
             this.richTextbox.Name = "richTextbox";
             this.richTextbox.Size = new System.Drawing.Size(369, 218);
             this.richTextbox.TabIndex = 6;
@@ -136,7 +136,7 @@
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.picAbout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmAbout";
