@@ -237,15 +237,6 @@ namespace ThumbnailViewer
 
             frmMain parentForm = (this.Parent.Parent.Parent as frmMain);
 
-            if (selected.Count == 0) {
-                ClearSpriteTextLabeles();
-                parentForm.SaveButtonSetText("Save All");
-            } else if (selected.Count == 1) {
-                parentForm.SaveButtonSetText("Save Selected");
-            } else if (selected.Count > 1) {
-                ClearSpriteTextLabeles();
-                parentForm.SaveButtonSetText("Save Selected");
-            }
 
         }
 

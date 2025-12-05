@@ -41,52 +41,56 @@ namespace bakuspr
         public frmMain()
         {
             InitializeComponent();
-            lblCustomPaletteFilename.Text = null;
             bgLoadPalette.RunWorkerAsync();
         }
+
+        //public static List<Sprite> sprites = new List<Sprite>();
+        public static Color[] palette = new Color[256];
+        public static Color[] defaultpalette = new Color[256];
+        public List<string> palettes = new List<string>();
 
         private void btnOpenSprite_Click(object sender, EventArgs e)
         {
-            if (ofdSprite.ShowDialog() == DialogResult.OK)
-            {
-                this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
-                tbViewer.Clear();
-                btnSave.Enabled = false;
-                bgLoadSprite.RunWorkerAsync();
-            }
-        }
+      
+          if (ofdSprite.ShowDialog() == DialogResult.OK)
+          {
+              byte[] buffer = File.ReadAllBytes(ofdSprite.FileName);
+              SprItem[] images = ImageHandler.ReadSpriteFile(buffer);
 
-        private void rbWin95Default_CheckedChanged(object sender, EventArgs e)
-        {
-            btnImport.Enabled = false;
-            tbViewer.Clear();
-            lblCustomPaletteFilename.Text = null;
-            bgLoadPalette.RunWorkerAsync();
-
-            if (File.Exists(ofdSprite.FileName))
-            {
-                bgLoadSprite.RunWorkerAsync();
-            }
-        }
-
-        private void rbCustom_CheckedChanged(object sender, EventArgs e)
-        {
-            btnImport.Enabled = true;     
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            if (ofdPalette.ShowDialog() == DialogResult.OK)
-            {
-                lblCustomPaletteFilename.Text = ofdPalette.SafeFileName;
-                tbViewer.Clear();
-                bgLoadPalette.RunWorkerAsync();
-
-                if (File.Exists(ofdSprite.FileName))
+              foreach (SprItem i in images)
+              {
+                // Update the GUI thread by invoking it
+                tbViewer.Invoke((MethodInvoker)delegate
                 {
-                    bgLoadSprite.RunWorkerAsync();
-                }
-            }
+                  tbViewer.AddImage(i);
+                });
+              }
+              /*
+              sprites = new List<Sprite>();
+              int numSprites = BitConverter.ToInt32(file, 8);
+              int spriteOff = BitConverter.ToInt32(file, 0xC);
+              for (int i = 0; i < numSprites; i++)
+              {
+                int data = (i * 0xC) + 0x10;
+                int width = BitConverter.ToInt16(file, data + 4);
+                int height = BitConverter.ToInt16(file, data + 6);
+                int dw = width;
+                if ((dw & 4) == 4)
+                  dw += 4;
+                byte[] sprite = new byte[(dw / 2) * height];
+                Array.Copy(file, spriteOff, sprite, 0, sprite.Length);
+                spriteOff += sprite.Length;
+                sprites.Add(new Sprite(new BitmapBits(width, height, sprite), new Point(BitConverter.ToInt16(file, data), BitConverter.ToInt16(file, data + 2)), BitConverter.ToInt16(file, data + 8) - 16));
+              }
+              tileList1.SelectedIndex = 0;
+              tileList1.ChangeSize();
+              this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
+             */
+              tbViewer.Clear();
+              bgLoadSprite.RunWorkerAsync();
+          }
+  
+
         }
 
         public void SetSpriteNumber(string number)
@@ -145,27 +149,16 @@ namespace bakuspr
             lblSpriteTotalDataBytes.Text = String.Format("Total Data Bytes: {0}", length);
         }
 
-        public void SaveButtonSetText(string text)
-        {
-            btnSave.Text = text;
-        }
-
-        private void btnAbout_Click(object sender, EventArgs e)
-        {
-            frmAbout about = new frmAbout();
-            about.ShowDialog();
-        }
-
         private void bgLoadPalette_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (rbCustom.Checked && File.Exists(ofdPalette.FileName))
+        {        
+            if (File.Exists(ofdPalette.FileName))
             {
                 byte[] buffer = File.ReadAllBytes(ofdPalette.FileName);
                 CurrentPalette = ImageHandler.LoadCustomPalette(buffer);
             }
             else
             {
-                CurrentPalette = ImageHandler.LoadWindows95DefaultPalette();
+                CurrentPalette = ImageHandler.LoadDefaultPalette();
             }
         }
 
@@ -190,84 +183,144 @@ namespace bakuspr
 
         private void bgLoadPalette_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            btnOpenSprite.Enabled = true;
+
         }
 
         private void bgLoadSprite_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            btnSave.Enabled = true;
             tbViewer.UseWaitCursor = false;
             transparentPanel.BringToFront();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Bitmap[] currentBitmaps = tbViewer.GetSelectedBitmaps();
+          frmAbout about = new frmAbout();
+          about.ShowDialog();
+        }
 
-            if (currentBitmaps.Count() == 1)
+        private void openSpriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (ofdSprite.ShowDialog() == DialogResult.OK)
+          {
+            this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
+            tbViewer.Clear();
+            bgLoadSprite.RunWorkerAsync();
+          }
+        }
+
+        private void selectPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          using (OpenFileDialog fd = new OpenFileDialog())
+          {
+            fd.DefaultExt = "bin";
+            fd.Filter = "Palette Files|*.bin;*.*";
+            fd.RestoreDirectory = true;
+            if (fd.ShowDialog(this) == DialogResult.OK)
             {
-                if (sfdSprite.ShowDialog() == DialogResult.OK)
-                {
-                    currentBitmaps[0].Save(sfdSprite.FileName, 
-                        System.Drawing.Imaging.ImageFormat.Bmp);
-                }
+              byte[] file = File.ReadAllBytes(fd.FileName);
+              Color[] loadedPalette = ImageHandler.LoadCustomPalette(file);
+              Array.Copy(loadedPalette, palette, loadedPalette.Length);
+              panelPalette.Invalidate();
             }
-            else if (currentBitmaps.Count() > 1)
+          }
+        }
+
+        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          Bitmap[] currentBitmaps = tbViewer.GetSelectedBitmaps();
+
+          if (currentBitmaps.Count() == 1)
+          {
+            if (sfdSprite.ShowDialog() == DialogResult.OK)
             {
-                if (fbdSprites.ShowDialog() == DialogResult.OK)
+              currentBitmaps[0].Save(sfdSprite.FileName,
+                  System.Drawing.Imaging.ImageFormat.Bmp);
+            }
+          }
+          else if (currentBitmaps.Count() > 1)
+          {
+            if (fbdSprites.ShowDialog() == DialogResult.OK)
+            {
+              MemoryBoxResult result = MemoryBoxResult.Null;
+
+              for (int i = 0; i < currentBitmaps.Count(); i++)
+              {
+
+                string filename = String.Format("{0}\\Sprite_{1}.bmp",
+                    fbdSprites.SelectedPath,
+                    i.ToString("000"));
+
+                if (File.Exists(filename))
                 {
-                    MemoryBoxResult result = MemoryBoxResult.Null;
+                  if (result == MemoryBoxResult.Null)
+                  {
+                    MemoryBox memoryBox = new MemoryBox();
+                    result = memoryBox.ShowMemoryDialog(
+                    String.Format("The file \"Sprite_{0}.bmp\" already exists, overwrite?",
+                        i.ToString("000")),
+                    "Overwrite Files?");
+                  }
+                  else
+                  {
+                    if (result == MemoryBoxResult.Cancel) { break; }
 
-                    for (int i = 0; i < currentBitmaps.Count(); i++) {
+                    switch ((MemoryBoxResult)result)
+                    {
+                      case MemoryBoxResult.Yes:
+                        currentBitmaps[i].Save(filename,
+                            System.Drawing.Imaging.ImageFormat.Bmp);
+                        result = MemoryBoxResult.Null;
+                        break;
 
-                        string filename = String.Format("{0}\\Sprite_{1}.bmp", 
-                            fbdSprites.SelectedPath, 
-                            i.ToString("000"));
+                      case MemoryBoxResult.YesToAll:
+                        currentBitmaps[i].Save(filename,
+                            System.Drawing.Imaging.ImageFormat.Bmp);
+                        break;
 
-                        if (File.Exists(filename))
-                        {
-                            if (result == MemoryBoxResult.Null)
-                            {
-                                MemoryBox memoryBox = new MemoryBox();
-                                result = memoryBox.ShowMemoryDialog(
-                                String.Format("The file \"Sprite_{0}.bmp\" already exists, overwrite?",
-                                    i.ToString("000")),
-                                "Overwrite Files?");
-                            }
-                            else
-                            {
-                                if (result == MemoryBoxResult.Cancel) { break; }
+                      case MemoryBoxResult.No:
+                        result = MemoryBoxResult.Null;
+                        break;
+                    }
+                  }
+                }
+                else
+                {
+                  currentBitmaps[i].Save(filename,
+                      System.Drawing.Imaging.ImageFormat.Bmp);
+                } // End - if (File.Exists(filename))
 
-                                switch ((MemoryBoxResult)result)
-                                {
-                                    case MemoryBoxResult.Yes:
-                                        currentBitmaps[i].Save(filename,
-                                            System.Drawing.Imaging.ImageFormat.Bmp);
-                                        result = MemoryBoxResult.Null;
-                                        break;
+              } // End - for (int i = 0; i < currentBitmaps.Count(); i++) {
 
-                                    case MemoryBoxResult.YesToAll:
-                                        currentBitmaps[i].Save(filename,
-                                            System.Drawing.Imaging.ImageFormat.Bmp);
-                                        break;
+            } // End - if (fbdSprites.ShowDialog() == DialogResult.OK)
 
-                                    case MemoryBoxResult.No:
-                                        result = MemoryBoxResult.Null;
-                                        break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            currentBitmaps[i].Save(filename,
-                                System.Drawing.Imaging.ImageFormat.Bmp);
-                        } // End - if (File.Exists(filename))
+          } // End - else if (currentBitmaps.Count() > 1)
 
-                    } // End - for (int i = 0; i < currentBitmaps.Count(); i++) {
+        }
+        Point selectedColor = new Point();
 
-                } // End - if (fbdSprites.ShowDialog() == DialogResult.OK)
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+          defaultpalette = ImageHandler.LoadDefaultPalette();
+          Array.Copy(defaultpalette, palette, defaultpalette.Length);
+        }
 
-            } // End - else if (currentBitmaps.Count() > 1)
+        private void panelPalette_Paint(object sender, PaintEventArgs e)
+        {
+          e.Graphics.Clear(SystemColors.Control);
+          int i = 0;
+          for (int y = 0; y <= 3; y++)
+            for (int x = 0; x <= 15; x++)
+            {
+              e.Graphics.FillRectangle(new SolidBrush(palette[i]), x * 32, y * 32, 32, 32);
+              e.Graphics.DrawRectangle(Pens.White, x * 32, y * 32, 31, 31);
+              i++;
+            }
+          e.Graphics.DrawRectangle(new Pen(Color.Yellow, 2), selectedColor.X * 32, selectedColor.Y * 32, 32, 32);
+        }
+
+        private void panelPalette_MouseDown(object sender, MouseEventArgs e)
+        {
 
         }
 
