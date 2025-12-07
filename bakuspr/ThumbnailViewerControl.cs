@@ -27,7 +27,10 @@ using bakuspr;
 
 namespace ThumbnailViewer
 {
-    public class ThumbnailViewerControl : FlowLayoutPanel
+
+  [ToolboxItem(true)]
+
+  public class ThumbnailViewerControl : FlowLayoutPanel
     {
         /// <summary> Added Image will be stored in this List
         /// </summary>

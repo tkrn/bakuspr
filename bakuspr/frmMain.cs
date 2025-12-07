@@ -49,6 +49,7 @@ namespace bakuspr
         public static Color[] defaultpalette = new Color[256];
         public List<string> palettes = new List<string>();
 
+
         private void btnOpenSprite_Click(object sender, EventArgs e)
         {
       

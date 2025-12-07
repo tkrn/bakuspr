@@ -90,6 +90,7 @@
     <Compile Include="SprItem.cs" />
     <Compile Include="ThumbnailViewerControl.cs">
       <SubType>Component</SubType>
+      <Generator>ThumbnailViewerControl</Generator>
     </Compile>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
