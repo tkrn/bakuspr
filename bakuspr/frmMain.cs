@@ -49,7 +49,6 @@ namespace bakuspr
         public static Color[] defaultpalette = new Color[256];
         public List<string> palettes = new List<string>();
 
-
         private void btnOpenSprite_Click(object sender, EventArgs e)
         {
       
@@ -87,8 +86,8 @@ namespace bakuspr
               tileList1.ChangeSize();
               this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
              */
-              tbViewer.Clear();
-              bgLoadSprite.RunWorkerAsync();
+              //tbViewer.Clear();
+              //bgLoadSprite.RunWorkerAsync();
           }
   
 
@@ -161,6 +160,8 @@ namespace bakuspr
             {
                 CurrentPalette = ImageHandler.LoadDefaultPalette();
             }
+
+            ImageHandler.SetColorPalette(CurrentPalette);
         }
 
         private void bgLoadSprite_DoWork(object sender, DoWorkEventArgs e)
@@ -182,15 +183,9 @@ namespace bakuspr
             }
         }
 
-        private void bgLoadPalette_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-        }
-
         private void bgLoadSprite_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             tbViewer.UseWaitCursor = false;
-            transparentPanel.BringToFront();
         }
 
 
@@ -212,19 +207,7 @@ namespace bakuspr
 
         private void selectPaletteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          using (OpenFileDialog fd = new OpenFileDialog())
-          {
-            fd.DefaultExt = "bin";
-            fd.Filter = "Palette Files|*.bin;*.*";
-            fd.RestoreDirectory = true;
-            if (fd.ShowDialog(this) == DialogResult.OK)
-            {
-              byte[] file = File.ReadAllBytes(fd.FileName);
-              Color[] loadedPalette = ImageHandler.LoadCustomPalette(file);
-              Array.Copy(loadedPalette, palette, loadedPalette.Length);
-              panelPalette.Invalidate();
-            }
-          }
+         
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -325,6 +308,39 @@ namespace bakuspr
 
         }
 
-    } // End - public partial class frmMain : Form
+    private void newPaletteMethodToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      using (OpenFileDialog fd = new OpenFileDialog())
+      {
+        fd.DefaultExt = "bin";
+        fd.Filter = "Palette Files|*.bin;*.*";
+        fd.RestoreDirectory = true;
+        if (fd.ShowDialog(this) == DialogResult.OK)
+        {
+          byte[] file = File.ReadAllBytes(fd.FileName);
+          Color[] loadedPalette = ImageHandler.LoadCustomPalette(file);
+          Array.Copy(loadedPalette, palette, loadedPalette.Length);
+          panelPalette.Invalidate();
+        }
+      }
+    }
+
+    private void oldPaletteMethodToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      using (OpenFileDialog fd = new OpenFileDialog())
+      {
+        fd.DefaultExt = "bin";
+        fd.Filter = "Palette Files|*.bin;*.*";
+        fd.RestoreDirectory = true;
+        if (fd.ShowDialog(this) == DialogResult.OK)
+        {
+          byte[] file = File.ReadAllBytes(fd.FileName);
+          Color[] loadedPalette = ImageHandler.LoadLegacyPaletteMethod(file);
+          Array.Copy(loadedPalette, palette, loadedPalette.Length);
+          panelPalette.Invalidate();
+        }
+      }
+    }
+  } // End - public partial class frmMain : Form
 
 } // End - namespace bakuspr

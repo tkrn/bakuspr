@@ -28,8 +28,6 @@ using bakuspr;
 namespace ThumbnailViewer
 {
 
-  [ToolboxItem(true)]
-
   public class ThumbnailViewerControl : FlowLayoutPanel
     {
         /// <summary> Added Image will be stored in this List
@@ -289,5 +287,16 @@ namespace ThumbnailViewer
 
             selection = new Rectangle(x, y, width, height);
         }
+
+    private void InitializeComponent()
+    {
+      this.SuspendLayout();
+      // 
+      // ThumbnailViewerControl
+      // 
+      this.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ResumeLayout(false);
+
     }
+  }
 }

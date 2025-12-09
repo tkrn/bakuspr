@@ -23,9 +23,11 @@ using System.Collections.Generic;
 
 namespace bakuspr
 {
+  
     public static class ImageHandler
     {
-        static Color[] colorPalette = new Color[256];
+
+        static Color[] CurrentLoadedPalette = new Color[256];
 
         public static Color[] LoadDefaultPalette()
         {
@@ -47,9 +49,63 @@ namespace bakuspr
           return colors;
         }
 
+        public static Color[] LoadLegacyPaletteMethod(byte[] sender)
+        {
+          Color[] colors = new Color[256];
+          colors[0] = Color.FromArgb(255, 0, 0, 0);
+          colors[1] = Color.FromArgb(255, 128, 0, 0);
+          colors[2] = Color.FromArgb(255, 0, 128, 0);
+          colors[3] = Color.FromArgb(255, 128, 128, 0);
+          colors[4] = Color.FromArgb(255, 0, 0, 128);
+          colors[5] = Color.FromArgb(255, 128, 0, 128);
+          colors[6] = Color.FromArgb(255, 0, 128, 128);
+          colors[7] = Color.FromArgb(255, 192, 192, 192);
+          colors[8] = Color.FromArgb(255, 192, 220, 192);
+          colors[9] = Color.FromArgb(255, 166, 202, 240);
+          colors[10] = Color.FromArgb(255, 0, 0, 0);
+          colors[11] = Color.FromArgb(255, 0, 0, 0);
+          colors[12] = Color.FromArgb(255, 0, 0, 0);
+          colors[13] = Color.FromArgb(255, 0, 0, 0);
+          colors[14] = Color.FromArgb(255, 0, 0, 0);
+          colors[15] = Color.FromArgb(255, 0, 0, 0);
+
+          int ii = 16;
+          for (int i = 0; i < sender.Length; i += 3)
+          {
+            int r = i + 2;
+            int g = i + 1;
+            int b = i;
+
+            if (ii < 256)
+            {
+              colors[ii] = Color.FromArgb(0, sender[r], sender[g], sender[b]);
+              ii++;
+            }
+
+          }
+
+          colors[246] = Color.FromArgb(255, 255, 251, 240);
+          colors[247] = Color.FromArgb(255, 160, 160, 164);
+          colors[248] = Color.FromArgb(255, 128, 128, 128);
+          colors[249] = Color.FromArgb(255, 255, 0, 0);
+          colors[250] = Color.FromArgb(255, 0, 255, 0);
+          colors[251] = Color.FromArgb(255, 255, 255, 0);
+          colors[252] = Color.FromArgb(255, 0, 0, 255);
+          colors[253] = Color.FromArgb(255, 255, 0, 255);
+          colors[254] = Color.FromArgb(255, 0, 255, 255);
+          colors[255] = Color.FromArgb(255, 255, 255, 255);
+
+          return colors;
+    }
+
+    public static void SetColorPalette(Color[] Palette)
+        {
+          CurrentLoadedPalette = Palette;
+        }
+
         private static Bitmap MakeBitmap(byte[] sender, int width, int height, Color[] pal)
         {
-            Bitmap bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            Bitmap bmp = new Bitmap(width, height);
             
             bmp.SetResolution(72.0f, 72.0f);
 
@@ -92,7 +148,7 @@ namespace bakuspr
                         Bitmap bmp = MakeBitmap(currentImageBuffer.ToArray(),
                             intWidth,
                             intHeight,
-                            colorPalette
+                            CurrentLoadedPalette
                         );
 
                         SprItemMeta m = new SprItemMeta();

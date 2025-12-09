@@ -42,12 +42,13 @@
       this.lblSpriteWidth = new System.Windows.Forms.Label();
       this.lblSpriteHeight = new System.Windows.Forms.Label();
       this.lblSpriteNumber = new System.Windows.Forms.Label();
-      this.transparentPanel = new System.Windows.Forms.Panel();
       this.sfdSprite = new System.Windows.Forms.SaveFileDialog();
       this.fbdSprites = new System.Windows.Forms.FolderBrowserDialog();
       this.menuMain = new System.Windows.Forms.MenuStrip();
       this.openSpriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.selectPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.oldPaletteMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.newPaletteMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,11 +56,13 @@
       this.verticalContainer = new System.Windows.Forms.SplitContainer();
       this.grpPalette = new System.Windows.Forms.GroupBox();
       this.panelPalette = new System.Windows.Forms.Panel();
+      this.tbViewer = new ThumbnailViewer.ThumbnailViewerControl();
       this.grpHexInfomation.SuspendLayout();
       this.grpInformation.SuspendLayout();
       this.menuMain.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.horizontalContainer)).BeginInit();
       this.horizontalContainer.Panel1.SuspendLayout();
+      this.horizontalContainer.Panel2.SuspendLayout();
       this.horizontalContainer.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.verticalContainer)).BeginInit();
       this.verticalContainer.Panel1.SuspendLayout();
@@ -70,7 +73,7 @@
       // 
       // ofdPalette
       // 
-      this.ofdPalette.Filter = "Baku Baku Palette (*.bin)|*.bin|*.*|*.*";
+      this.ofdPalette.Filter = "Baku Baku Palette (*.bin)|*.bin";
       this.ofdPalette.Title = "Open a Custom Palette File";
       // 
       // ofdSprite
@@ -86,7 +89,6 @@
       // bgLoadPalette
       // 
       this.bgLoadPalette.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgLoadPalette_DoWork);
-      this.bgLoadPalette.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgLoadPalette_RunWorkerCompleted);
       // 
       // grpHexInfomation
       // 
@@ -187,18 +189,6 @@
       this.lblSpriteNumber.TabIndex = 9;
       this.lblSpriteNumber.Text = "# ";
       // 
-      // transparentPanel
-      // 
-      this.transparentPanel.AutoSize = true;
-      this.transparentPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.transparentPanel.BackColor = System.Drawing.Color.Transparent;
-      this.transparentPanel.ForeColor = System.Drawing.Color.Transparent;
-      this.transparentPanel.Location = new System.Drawing.Point(2, 2);
-      this.transparentPanel.Margin = new System.Windows.Forms.Padding(2);
-      this.transparentPanel.Name = "transparentPanel";
-      this.transparentPanel.Size = new System.Drawing.Size(0, 0);
-      this.transparentPanel.TabIndex = 1;
-      // 
       // sfdSprite
       // 
       this.sfdSprite.Filter = "Bitmap|*.bmp";
@@ -231,10 +221,27 @@
       // 
       // selectPaletteToolStripMenuItem
       // 
+      this.selectPaletteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newPaletteMethodToolStripMenuItem,
+            this.oldPaletteMethodToolStripMenuItem});
       this.selectPaletteToolStripMenuItem.Name = "selectPaletteToolStripMenuItem";
       this.selectPaletteToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
       this.selectPaletteToolStripMenuItem.Text = "Select Palette";
       this.selectPaletteToolStripMenuItem.Click += new System.EventHandler(this.selectPaletteToolStripMenuItem_Click);
+      // 
+      // oldPaletteMethodToolStripMenuItem
+      // 
+      this.oldPaletteMethodToolStripMenuItem.Name = "oldPaletteMethodToolStripMenuItem";
+      this.oldPaletteMethodToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+      this.oldPaletteMethodToolStripMenuItem.Text = "Old Palette Method";
+      this.oldPaletteMethodToolStripMenuItem.Click += new System.EventHandler(this.oldPaletteMethodToolStripMenuItem_Click);
+      // 
+      // newPaletteMethodToolStripMenuItem
+      // 
+      this.newPaletteMethodToolStripMenuItem.Name = "newPaletteMethodToolStripMenuItem";
+      this.newPaletteMethodToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+      this.newPaletteMethodToolStripMenuItem.Text = "New Palette Method";
+      this.newPaletteMethodToolStripMenuItem.Click += new System.EventHandler(this.newPaletteMethodToolStripMenuItem_Click);
       // 
       // saveSelectedToolStripMenuItem
       // 
@@ -257,21 +264,27 @@
       // 
       // horizontalContainer
       // 
-      this.horizontalContainer.Location = new System.Drawing.Point(0, 27);
+      this.horizontalContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.horizontalContainer.Location = new System.Drawing.Point(0, 24);
       this.horizontalContainer.Name = "horizontalContainer";
       this.horizontalContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
       // 
       // horizontalContainer.Panel1
       // 
       this.horizontalContainer.Panel1.Controls.Add(this.verticalContainer);
-      this.horizontalContainer.Size = new System.Drawing.Size(719, 789);
-      this.horizontalContainer.SplitterDistance = 186;
+      // 
+      // horizontalContainer.Panel2
+      // 
+      this.horizontalContainer.Panel2.Controls.Add(this.tbViewer);
+      this.horizontalContainer.Size = new System.Drawing.Size(719, 537);
+      this.horizontalContainer.SplitterDistance = 192;
       this.horizontalContainer.TabIndex = 34;
       // 
       // verticalContainer
       // 
-      this.verticalContainer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.verticalContainer.Dock = System.Windows.Forms.DockStyle.Top;
+      this.verticalContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+      this.verticalContainer.IsSplitterFixed = true;
       this.verticalContainer.Location = new System.Drawing.Point(0, 0);
       this.verticalContainer.Name = "verticalContainer";
       // 
@@ -283,12 +296,14 @@
       // verticalContainer.Panel2
       // 
       this.verticalContainer.Panel2.Controls.Add(this.grpPalette);
-      this.verticalContainer.Size = new System.Drawing.Size(789, 186);
-      this.verticalContainer.SplitterDistance = 183;
+      this.verticalContainer.Size = new System.Drawing.Size(719, 186);
+      this.verticalContainer.SplitterDistance = 185;
       this.verticalContainer.TabIndex = 0;
       // 
       // grpPalette
       // 
+      this.grpPalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.grpPalette.Controls.Add(this.panelPalette);
       this.grpPalette.Location = new System.Drawing.Point(3, 12);
       this.grpPalette.Name = "grpPalette";
@@ -299,12 +314,24 @@
       // 
       // panelPalette
       // 
+      this.panelPalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panelPalette.Location = new System.Drawing.Point(8, 33);
       this.panelPalette.Name = "panelPalette";
       this.panelPalette.Size = new System.Drawing.Size(501, 130);
       this.panelPalette.TabIndex = 0;
       this.panelPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.panelPalette_Paint);
       this.panelPalette.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelPalette_MouseDown);
+      // 
+      // tbViewer
+      // 
+      this.tbViewer.AutoScroll = true;
+      this.tbViewer.AutoSize = true;
+      this.tbViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tbViewer.Location = new System.Drawing.Point(0, 0);
+      this.tbViewer.Name = "tbViewer";
+      this.tbViewer.Size = new System.Drawing.Size(719, 341);
+      this.tbViewer.TabIndex = 0;
       // 
       // frmMain
       // 
@@ -317,7 +344,6 @@
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this.menuMain;
       this.Margin = new System.Windows.Forms.Padding(2);
-      this.MaximumSize = new System.Drawing.Size(735, 2024);
       this.MinimumSize = new System.Drawing.Size(735, 350);
       this.Name = "frmMain";
       this.Text = "bakuspr by tkrn";
@@ -329,6 +355,8 @@
       this.menuMain.ResumeLayout(false);
       this.menuMain.PerformLayout();
       this.horizontalContainer.Panel1.ResumeLayout(false);
+      this.horizontalContainer.Panel2.ResumeLayout(false);
+      this.horizontalContainer.Panel2.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.horizontalContainer)).EndInit();
       this.horizontalContainer.ResumeLayout(false);
       this.verticalContainer.Panel1.ResumeLayout(false);
@@ -357,7 +385,7 @@
         private System.Windows.Forms.Label lblSpriteHeight;
         private System.Windows.Forms.Label lblSpriteNumber;
         private ThumbnailViewer.ThumbnailViewerControl tbViewer;
-        private System.Windows.Forms.Panel transparentPanel;
+
         private System.Windows.Forms.SaveFileDialog sfdSprite;
         private System.Windows.Forms.FolderBrowserDialog fbdSprites;
     private System.Windows.Forms.MenuStrip menuMain;
@@ -370,6 +398,8 @@
     private System.Windows.Forms.SplitContainer verticalContainer;
     private System.Windows.Forms.GroupBox grpPalette;
     private System.Windows.Forms.Panel panelPalette;
+    private System.Windows.Forms.ToolStripMenuItem oldPaletteMethodToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem newPaletteMethodToolStripMenuItem;
   }
 }
 
