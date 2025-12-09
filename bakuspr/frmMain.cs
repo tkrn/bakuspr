@@ -34,14 +34,11 @@ namespace bakuspr
 {
     public partial class frmMain : Form
     {
-        Color[] CurrentPalette;
-
         String WndTitle = "bakuspr by tkrn";
-      
+     
         public frmMain()
         {
             InitializeComponent();
-            bgLoadPalette.RunWorkerAsync();
         }
 
         //public static List<Sprite> sprites = new List<Sprite>();
@@ -149,20 +146,6 @@ namespace bakuspr
             lblSpriteTotalDataBytes.Text = String.Format("Total Data Bytes: {0}", length);
         }
 
-        private void bgLoadPalette_DoWork(object sender, DoWorkEventArgs e)
-        {        
-            if (File.Exists(ofdPalette.FileName))
-            {
-                byte[] buffer = File.ReadAllBytes(ofdPalette.FileName);
-                CurrentPalette = ImageHandler.LoadCustomPalette(buffer);
-            }
-            else
-            {
-                CurrentPalette = ImageHandler.LoadDefaultPalette();
-            }
-
-            ImageHandler.SetColorPalette(CurrentPalette);
-        }
 
         private void bgLoadSprite_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -188,7 +171,6 @@ namespace bakuspr
             tbViewer.UseWaitCursor = false;
         }
 
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
           frmAbout about = new frmAbout();
@@ -200,14 +182,10 @@ namespace bakuspr
           if (ofdSprite.ShowDialog() == DialogResult.OK)
           {
             this.Text = String.Format(WndTitle + " - {0}", ofdSprite.SafeFileName);
+            reloadSpriteToolStripMenuItem.Enabled = true;
             tbViewer.Clear();
             bgLoadSprite.RunWorkerAsync();
           }
-        }
-
-        private void selectPaletteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-         
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -281,66 +259,131 @@ namespace bakuspr
           } // End - else if (currentBitmaps.Count() > 1)
 
         }
+
         Point selectedColor = new Point();
 
         private void frmMain_Load(object sender, EventArgs e)
         {
           defaultpalette = ImageHandler.LoadDefaultPalette();
           Array.Copy(defaultpalette, palette, defaultpalette.Length);
+          ImageHandler.SetColorPalette(palette);
         }
 
         private void panelPalette_Paint(object sender, PaintEventArgs e)
         {
           e.Graphics.Clear(SystemColors.Control);
           int i = 0;
-          for (int y = 0; y <= 3; y++)
-            for (int x = 0; x <= 15; x++)
+          for (int y = 0; y <= 8; y++)
+            for (int x = 0; x <= 35; x++)
             {
-              e.Graphics.FillRectangle(new SolidBrush(palette[i]), x * 32, y * 32, 32, 32);
-              e.Graphics.DrawRectangle(Pens.White, x * 32, y * 32, 31, 31);
+              if (i < 256)
+              {
+                e.Graphics.FillRectangle(new SolidBrush(palette[i]), x * 16, y * 16, 16, 16);
+                e.Graphics.DrawRectangle(Pens.White, x * 16, y * 16, 15, 15);
+              }
               i++;
             }
-          e.Graphics.DrawRectangle(new Pen(Color.Yellow, 2), selectedColor.X * 32, selectedColor.Y * 32, 32, 32);
+          e.Graphics.DrawRectangle(new Pen(Color.Yellow, 2), selectedColor.X * 16, selectedColor.Y * 16, 16, 16);
+        }
+
+        private void defaultPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          Array.Copy(defaultpalette, palette, defaultpalette.Length);
+        }
+
+        private void reloadSpriteProcess()
+        {
+          if (ofdSprite.FileName != string.Empty)
+          {
+            byte[] buffer = File.ReadAllBytes(ofdSprite.FileName);
+            SprItem[] images = ImageHandler.ReadSpriteFile(buffer);
+            tbViewer.Clear();
+
+            foreach (SprItem i in images)
+            {
+              // Update the GUI thread by invoking it
+              tbViewer.Invoke((MethodInvoker)delegate
+              {
+                tbViewer.AddImage(i);
+              });
+            }
+          }
+        }
+
+        private void reloadSpriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          reloadSpriteProcess();
+        }
+
+        private void rgb4bppMethodToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (ofdPalette.ShowDialog(this) == DialogResult.OK)
+          {
+            byte[] file = File.ReadAllBytes(ofdPalette.FileName);
+            grpPalette.Text = "Palette - " + ofdPalette.SafeFileName + " (loaded as rgb 4bpp)";
+            Color[] loadedPalette = ImageHandler.Load_rgb4bpp_Palette(file);
+            Array.Copy(loadedPalette, palette, loadedPalette.Length);
+            ImageHandler.SetColorPalette(palette);
+            panelPalette.Invalidate();
+            reloadSpriteProcess();
+          }
+        }
+
+        private void bgr3bppMethodToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (ofdPalette.ShowDialog(this) == DialogResult.OK)
+          {
+            byte[] file = File.ReadAllBytes(ofdPalette.FileName);
+            grpPalette.Text = "Palette - " + ofdPalette.SafeFileName + " (loaded as bgr 3bpp)";
+            Color[] loadedPalette = ImageHandler.Load_bgr3bpp_Palette(file);
+            Array.Copy(loadedPalette, palette, loadedPalette.Length);
+            ImageHandler.SetColorPalette(palette);
+            panelPalette.Invalidate();
+            reloadSpriteProcess();
+          }
+        }
+
+        private void rgb3bppMethodToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (ofdPalette.ShowDialog(this) == DialogResult.OK)
+          {
+            byte[] file = File.ReadAllBytes(ofdPalette.FileName);
+            grpPalette.Text = "Palette - " + ofdPalette.SafeFileName + " (loaded as rgb 3bpp)";
+            Color[] loadedPalette = ImageHandler.Load_rgb3bpp_Palette(file);
+            Array.Copy(loadedPalette, palette, loadedPalette.Length);
+            ImageHandler.SetColorPalette(palette);
+            panelPalette.Invalidate();
+            reloadSpriteProcess();
+          }
+        }
+
+        private void bgr4bppMethodToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          if (ofdPalette.ShowDialog(this) == DialogResult.OK)
+          {
+            byte[] file = File.ReadAllBytes(ofdPalette.FileName);
+            grpPalette.Text = "Palette - " + ofdPalette.SafeFileName + " (loaded as bgr 4bpp)";
+            Color[] loadedPalette = ImageHandler.Load_bgr4bpp_Palette(file);
+            Array.Copy(loadedPalette, palette, loadedPalette.Length);
+            ImageHandler.SetColorPalette(palette);
+            panelPalette.Invalidate();
+            reloadSpriteProcess();
+          }
         }
 
         private void panelPalette_MouseDown(object sender, MouseEventArgs e)
         {
-
+          Rectangle mouseRect = new Rectangle(e.X, e.Y, 1, 1); // Mouse position as a rectangle
+      
+          
+          foreach (Control control in this.Controls)
+          {
+            if (control is Panel && mouseRect.IntersectsWith(control.Bounds))
+            {
+              control.BackColor = Color.LightGreen; // Change color on intersection
+            }
+          }
         }
-
-    private void newPaletteMethodToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      using (OpenFileDialog fd = new OpenFileDialog())
-      {
-        fd.DefaultExt = "bin";
-        fd.Filter = "Palette Files|*.bin;*.*";
-        fd.RestoreDirectory = true;
-        if (fd.ShowDialog(this) == DialogResult.OK)
-        {
-          byte[] file = File.ReadAllBytes(fd.FileName);
-          Color[] loadedPalette = ImageHandler.LoadCustomPalette(file);
-          Array.Copy(loadedPalette, palette, loadedPalette.Length);
-          panelPalette.Invalidate();
-        }
-      }
-    }
-
-    private void oldPaletteMethodToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      using (OpenFileDialog fd = new OpenFileDialog())
-      {
-        fd.DefaultExt = "bin";
-        fd.Filter = "Palette Files|*.bin;*.*";
-        fd.RestoreDirectory = true;
-        if (fd.ShowDialog(this) == DialogResult.OK)
-        {
-          byte[] file = File.ReadAllBytes(fd.FileName);
-          Color[] loadedPalette = ImageHandler.LoadLegacyPaletteMethod(file);
-          Array.Copy(loadedPalette, palette, loadedPalette.Length);
-          panelPalette.Invalidate();
-        }
-      }
-    }
   } // End - public partial class frmMain : Form
 
 } // End - namespace bakuspr

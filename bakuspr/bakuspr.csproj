@@ -51,7 +51,8 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\bicon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -124,9 +125,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bicon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bakubakulogo.png" />

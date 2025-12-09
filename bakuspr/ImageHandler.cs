@@ -41,62 +41,55 @@ namespace bakuspr
           return palette;
         }
 
-        public static Color[] LoadCustomPalette(byte[] sender)
+        public static Color[] Load_rgb4bpp_Palette(byte[] sender)
         {
+          Color[] combined = new Color[256];
           Color[] colors = new Color[sender.Length / 4];
           for (int i = 0; i < colors.Length; i++)
             colors[i] = Color.FromArgb(sender[i * 4], sender[i * 4 + 1], sender[i * 4 + 2]);
-          return colors;
+
+          Array.Copy(colors, 0, combined, 16, colors.Length);
+
+          return combined;
+    }
+
+        public static Color[] Load_bgr4bpp_Palette(byte[] sender)
+        {
+          Color[] combined = new Color[256];
+          Color[] colors = new Color[sender.Length / 4];
+          for (int i = 0; i < colors.Length; i++)
+            colors[i] = Color.FromArgb(sender[i * 4 + 2], sender[i * 4 + 1], sender[i * 4]);
+
+          Array.Copy(colors, 0, combined, 16, colors.Length);
+
+          return combined;
+    }
+
+    public static Color[] Load_bgr3bpp_Palette(byte[] sender)
+        {
+          Color[] combined = new Color[256];
+          Color[] colors = new Color[sender.Length / 3];
+
+          for (int i = 0; i < colors.Length; i++)
+            colors[i] = Color.FromArgb(sender[i * 3 + 2], sender[i * 3 + 1], sender[i * 3]);
+
+          Array.Copy(colors, 0, combined, 16, colors.Length);
+
+          return combined; 
         }
 
-        public static Color[] LoadLegacyPaletteMethod(byte[] sender)
+        public static Color[] Load_rgb3bpp_Palette(byte[] sender)
         {
-          Color[] colors = new Color[256];
-          colors[0] = Color.FromArgb(255, 0, 0, 0);
-          colors[1] = Color.FromArgb(255, 128, 0, 0);
-          colors[2] = Color.FromArgb(255, 0, 128, 0);
-          colors[3] = Color.FromArgb(255, 128, 128, 0);
-          colors[4] = Color.FromArgb(255, 0, 0, 128);
-          colors[5] = Color.FromArgb(255, 128, 0, 128);
-          colors[6] = Color.FromArgb(255, 0, 128, 128);
-          colors[7] = Color.FromArgb(255, 192, 192, 192);
-          colors[8] = Color.FromArgb(255, 192, 220, 192);
-          colors[9] = Color.FromArgb(255, 166, 202, 240);
-          colors[10] = Color.FromArgb(255, 0, 0, 0);
-          colors[11] = Color.FromArgb(255, 0, 0, 0);
-          colors[12] = Color.FromArgb(255, 0, 0, 0);
-          colors[13] = Color.FromArgb(255, 0, 0, 0);
-          colors[14] = Color.FromArgb(255, 0, 0, 0);
-          colors[15] = Color.FromArgb(255, 0, 0, 0);
+          Color[] combined = new Color[256];
+          Color[] colors = new Color[sender.Length / 3];
 
-          int ii = 16;
-          for (int i = 0; i < sender.Length; i += 3)
-          {
-            int r = i + 2;
-            int g = i + 1;
-            int b = i;
+          for (int i = 0; i < colors.Length; i++)
+            colors[i] = Color.FromArgb(sender[i * 3], sender[i * 3 + 1], sender[i * 3 + 2]);
 
-            if (ii < 256)
-            {
-              colors[ii] = Color.FromArgb(0, sender[r], sender[g], sender[b]);
-              ii++;
-            }
+          Array.Copy(colors, 0, combined, 16, colors.Length);
 
-          }
-
-          colors[246] = Color.FromArgb(255, 255, 251, 240);
-          colors[247] = Color.FromArgb(255, 160, 160, 164);
-          colors[248] = Color.FromArgb(255, 128, 128, 128);
-          colors[249] = Color.FromArgb(255, 255, 0, 0);
-          colors[250] = Color.FromArgb(255, 0, 255, 0);
-          colors[251] = Color.FromArgb(255, 255, 255, 0);
-          colors[252] = Color.FromArgb(255, 0, 0, 255);
-          colors[253] = Color.FromArgb(255, 255, 0, 255);
-          colors[254] = Color.FromArgb(255, 0, 255, 255);
-          colors[255] = Color.FromArgb(255, 255, 255, 255);
-
-          return colors;
-    }
+          return combined;
+        }
 
     public static void SetColorPalette(Color[] Palette)
         {

@@ -32,7 +32,6 @@
       this.ofdPalette = new System.Windows.Forms.OpenFileDialog();
       this.ofdSprite = new System.Windows.Forms.OpenFileDialog();
       this.bgLoadSprite = new System.ComponentModel.BackgroundWorker();
-      this.bgLoadPalette = new System.ComponentModel.BackgroundWorker();
       this.grpHexInfomation = new System.Windows.Forms.GroupBox();
       this.lblSpriteTotalDataBytes = new System.Windows.Forms.Label();
       this.lblSpriteWidthByte = new System.Windows.Forms.Label();
@@ -46,9 +45,13 @@
       this.fbdSprites = new System.Windows.Forms.FolderBrowserDialog();
       this.menuMain = new System.Windows.Forms.MenuStrip();
       this.openSpriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.reloadSpriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.selectPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.oldPaletteMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.newPaletteMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.defaultPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.bgr3bppPaletteMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.rgb3bppMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.bgr4bppMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.rgb4bppMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,6 +60,11 @@
       this.grpPalette = new System.Windows.Forms.GroupBox();
       this.panelPalette = new System.Windows.Forms.Panel();
       this.tbViewer = new ThumbnailViewer.ThumbnailViewerControl();
+      this.grpPaletteMode = new System.Windows.Forms.GroupBox();
+      this.rb_bgr_3bpp = new System.Windows.Forms.RadioButton();
+      this.rb_rgb_3bpp = new System.Windows.Forms.RadioButton();
+      this.rb_rgb_4bpp = new System.Windows.Forms.RadioButton();
+      this.rb_bgr_4bpp = new System.Windows.Forms.RadioButton();
       this.grpHexInfomation.SuspendLayout();
       this.grpInformation.SuspendLayout();
       this.menuMain.SuspendLayout();
@@ -69,26 +77,24 @@
       this.verticalContainer.Panel2.SuspendLayout();
       this.verticalContainer.SuspendLayout();
       this.grpPalette.SuspendLayout();
+      this.grpPaletteMode.SuspendLayout();
       this.SuspendLayout();
       // 
       // ofdPalette
       // 
-      this.ofdPalette.Filter = "Baku Baku Palette (*.bin)|*.bin";
+      this.ofdPalette.Filter = "Palette Files|*.bin;*.pal;*.fix;";
+      this.ofdPalette.RestoreDirectory = true;
       this.ofdPalette.Title = "Open a Custom Palette File";
       // 
       // ofdSprite
       // 
-      this.ofdSprite.Filter = "Baku Baku Sprite File (*.spr)|*.spr|*.*|*.*";
+      this.ofdSprite.Filter = "Sprite File (*.spr)|*.spr;*.fix;";
       this.ofdSprite.Title = "Open a Sprite File";
       // 
       // bgLoadSprite
       // 
       this.bgLoadSprite.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgLoadSprite_DoWork);
       this.bgLoadSprite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgLoadSprite_RunWorkerCompleted);
-      // 
-      // bgLoadPalette
-      // 
-      this.bgLoadPalette.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgLoadPalette_DoWork);
       // 
       // grpHexInfomation
       // 
@@ -202,13 +208,14 @@
       // 
       this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openSpriteToolStripMenuItem,
+            this.reloadSpriteToolStripMenuItem,
             this.selectPaletteToolStripMenuItem,
             this.saveSelectedToolStripMenuItem,
             this.saveAllToolStripMenuItem,
             this.aboutToolStripMenuItem});
       this.menuMain.Location = new System.Drawing.Point(0, 0);
       this.menuMain.Name = "menuMain";
-      this.menuMain.Size = new System.Drawing.Size(719, 24);
+      this.menuMain.Size = new System.Drawing.Size(1022, 24);
       this.menuMain.TabIndex = 17;
       this.menuMain.Text = "menuStrip1";
       // 
@@ -219,29 +226,60 @@
       this.openSpriteToolStripMenuItem.Text = "Open Sprite";
       this.openSpriteToolStripMenuItem.Click += new System.EventHandler(this.openSpriteToolStripMenuItem_Click);
       // 
+      // reloadSpriteToolStripMenuItem
+      // 
+      this.reloadSpriteToolStripMenuItem.Enabled = false;
+      this.reloadSpriteToolStripMenuItem.Name = "reloadSpriteToolStripMenuItem";
+      this.reloadSpriteToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+      this.reloadSpriteToolStripMenuItem.Text = "Reload Sprite";
+      this.reloadSpriteToolStripMenuItem.Click += new System.EventHandler(this.reloadSpriteToolStripMenuItem_Click);
+      // 
       // selectPaletteToolStripMenuItem
       // 
       this.selectPaletteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newPaletteMethodToolStripMenuItem,
-            this.oldPaletteMethodToolStripMenuItem});
+            this.defaultPaletteToolStripMenuItem,
+            this.bgr3bppPaletteMethodToolStripMenuItem,
+            this.rgb3bppMethodToolStripMenuItem,
+            this.bgr4bppMethodToolStripMenuItem,
+            this.rgb4bppMethodToolStripMenuItem});
       this.selectPaletteToolStripMenuItem.Name = "selectPaletteToolStripMenuItem";
       this.selectPaletteToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
       this.selectPaletteToolStripMenuItem.Text = "Select Palette";
-      this.selectPaletteToolStripMenuItem.Click += new System.EventHandler(this.selectPaletteToolStripMenuItem_Click);
       // 
-      // oldPaletteMethodToolStripMenuItem
+      // defaultPaletteToolStripMenuItem
       // 
-      this.oldPaletteMethodToolStripMenuItem.Name = "oldPaletteMethodToolStripMenuItem";
-      this.oldPaletteMethodToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-      this.oldPaletteMethodToolStripMenuItem.Text = "Old Palette Method";
-      this.oldPaletteMethodToolStripMenuItem.Click += new System.EventHandler(this.oldPaletteMethodToolStripMenuItem_Click);
+      this.defaultPaletteToolStripMenuItem.Name = "defaultPaletteToolStripMenuItem";
+      this.defaultPaletteToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.defaultPaletteToolStripMenuItem.Text = "Default Palette";
+      this.defaultPaletteToolStripMenuItem.Click += new System.EventHandler(this.defaultPaletteToolStripMenuItem_Click);
       // 
-      // newPaletteMethodToolStripMenuItem
+      // bgr3bppPaletteMethodToolStripMenuItem
       // 
-      this.newPaletteMethodToolStripMenuItem.Name = "newPaletteMethodToolStripMenuItem";
-      this.newPaletteMethodToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-      this.newPaletteMethodToolStripMenuItem.Text = "New Palette Method";
-      this.newPaletteMethodToolStripMenuItem.Click += new System.EventHandler(this.newPaletteMethodToolStripMenuItem_Click);
+      this.bgr3bppPaletteMethodToolStripMenuItem.Name = "bgr3bppPaletteMethodToolStripMenuItem";
+      this.bgr3bppPaletteMethodToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.bgr3bppPaletteMethodToolStripMenuItem.Text = "bgr 3bpp Method";
+      this.bgr3bppPaletteMethodToolStripMenuItem.Click += new System.EventHandler(this.bgr3bppMethodToolStripMenuItem_Click);
+      // 
+      // rgb3bppMethodToolStripMenuItem
+      // 
+      this.rgb3bppMethodToolStripMenuItem.Name = "rgb3bppMethodToolStripMenuItem";
+      this.rgb3bppMethodToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.rgb3bppMethodToolStripMenuItem.Text = "rgb 3bpp Method";
+      this.rgb3bppMethodToolStripMenuItem.Click += new System.EventHandler(this.rgb3bppMethodToolStripMenuItem_Click);
+      // 
+      // bgr4bppMethodToolStripMenuItem
+      // 
+      this.bgr4bppMethodToolStripMenuItem.Name = "bgr4bppMethodToolStripMenuItem";
+      this.bgr4bppMethodToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.bgr4bppMethodToolStripMenuItem.Text = "bgr 4bpp Method";
+      this.bgr4bppMethodToolStripMenuItem.Click += new System.EventHandler(this.bgr4bppMethodToolStripMenuItem_Click);
+      // 
+      // rgb4bppMethodToolStripMenuItem
+      // 
+      this.rgb4bppMethodToolStripMenuItem.Name = "rgb4bppMethodToolStripMenuItem";
+      this.rgb4bppMethodToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+      this.rgb4bppMethodToolStripMenuItem.Text = "rgb 4bpp Method";
+      this.rgb4bppMethodToolStripMenuItem.Click += new System.EventHandler(this.rgb4bppMethodToolStripMenuItem_Click);
       // 
       // saveSelectedToolStripMenuItem
       // 
@@ -265,6 +303,7 @@
       // horizontalContainer
       // 
       this.horizontalContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.horizontalContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
       this.horizontalContainer.Location = new System.Drawing.Point(0, 24);
       this.horizontalContainer.Name = "horizontalContainer";
       this.horizontalContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -276,8 +315,8 @@
       // horizontalContainer.Panel2
       // 
       this.horizontalContainer.Panel2.Controls.Add(this.tbViewer);
-      this.horizontalContainer.Size = new System.Drawing.Size(719, 537);
-      this.horizontalContainer.SplitterDistance = 192;
+      this.horizontalContainer.Size = new System.Drawing.Size(1022, 537);
+      this.horizontalContainer.SplitterDistance = 186;
       this.horizontalContainer.TabIndex = 34;
       // 
       // verticalContainer
@@ -295,8 +334,9 @@
       // 
       // verticalContainer.Panel2
       // 
+      this.verticalContainer.Panel2.Controls.Add(this.grpPaletteMode);
       this.verticalContainer.Panel2.Controls.Add(this.grpPalette);
-      this.verticalContainer.Size = new System.Drawing.Size(719, 186);
+      this.verticalContainer.Size = new System.Drawing.Size(1022, 186);
       this.verticalContainer.SplitterDistance = 185;
       this.verticalContainer.TabIndex = 0;
       // 
@@ -305,9 +345,9 @@
       this.grpPalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.grpPalette.Controls.Add(this.panelPalette);
-      this.grpPalette.Location = new System.Drawing.Point(3, 12);
+      this.grpPalette.Location = new System.Drawing.Point(133, 12);
       this.grpPalette.Name = "grpPalette";
-      this.grpPalette.Size = new System.Drawing.Size(519, 173);
+      this.grpPalette.Size = new System.Drawing.Size(688, 173);
       this.grpPalette.TabIndex = 0;
       this.grpPalette.TabStop = false;
       this.grpPalette.Text = "Palette";
@@ -318,7 +358,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panelPalette.Location = new System.Drawing.Point(8, 33);
       this.panelPalette.Name = "panelPalette";
-      this.panelPalette.Size = new System.Drawing.Size(501, 130);
+      this.panelPalette.Size = new System.Drawing.Size(670, 130);
       this.panelPalette.TabIndex = 0;
       this.panelPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.panelPalette_Paint);
       this.panelPalette.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelPalette_MouseDown);
@@ -330,14 +370,69 @@
       this.tbViewer.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tbViewer.Location = new System.Drawing.Point(0, 0);
       this.tbViewer.Name = "tbViewer";
-      this.tbViewer.Size = new System.Drawing.Size(719, 341);
+      this.tbViewer.Size = new System.Drawing.Size(1022, 347);
       this.tbViewer.TabIndex = 0;
+      // 
+      // grpPaletteMode
+      // 
+      this.grpPaletteMode.Controls.Add(this.rb_bgr_4bpp);
+      this.grpPaletteMode.Controls.Add(this.rb_rgb_4bpp);
+      this.grpPaletteMode.Controls.Add(this.rb_rgb_3bpp);
+      this.grpPaletteMode.Controls.Add(this.rb_bgr_3bpp);
+      this.grpPaletteMode.Location = new System.Drawing.Point(3, 12);
+      this.grpPaletteMode.Name = "grpPaletteMode";
+      this.grpPaletteMode.Size = new System.Drawing.Size(124, 173);
+      this.grpPaletteMode.TabIndex = 1;
+      this.grpPaletteMode.TabStop = false;
+      this.grpPaletteMode.Text = "Palette Mode";
+      // 
+      // rb_bgr_3bpp
+      // 
+      this.rb_bgr_3bpp.AutoSize = true;
+      this.rb_bgr_3bpp.Checked = true;
+      this.rb_bgr_3bpp.Location = new System.Drawing.Point(26, 66);
+      this.rb_bgr_3bpp.Name = "rb_bgr_3bpp";
+      this.rb_bgr_3bpp.Size = new System.Drawing.Size(67, 17);
+      this.rb_bgr_3bpp.TabIndex = 0;
+      this.rb_bgr_3bpp.TabStop = true;
+      this.rb_bgr_3bpp.Text = "bgr 3bpp";
+      this.rb_bgr_3bpp.UseVisualStyleBackColor = true;
+      // 
+      // rb_rgb_3bpp
+      // 
+      this.rb_rgb_3bpp.AutoSize = true;
+      this.rb_rgb_3bpp.Location = new System.Drawing.Point(26, 42);
+      this.rb_rgb_3bpp.Name = "rb_rgb_3bpp";
+      this.rb_rgb_3bpp.Size = new System.Drawing.Size(67, 17);
+      this.rb_rgb_3bpp.TabIndex = 1;
+      this.rb_rgb_3bpp.Text = "rgb 3bpp";
+      this.rb_rgb_3bpp.UseVisualStyleBackColor = true;
+      // 
+      // rb_rgb_4bpp
+      // 
+      this.rb_rgb_4bpp.AutoSize = true;
+      this.rb_rgb_4bpp.Location = new System.Drawing.Point(26, 89);
+      this.rb_rgb_4bpp.Name = "rb_rgb_4bpp";
+      this.rb_rgb_4bpp.Size = new System.Drawing.Size(67, 17);
+      this.rb_rgb_4bpp.TabIndex = 2;
+      this.rb_rgb_4bpp.Text = "rgb 4bpp";
+      this.rb_rgb_4bpp.UseVisualStyleBackColor = true;
+      // 
+      // rb_bgr_4bpp
+      // 
+      this.rb_bgr_4bpp.AutoSize = true;
+      this.rb_bgr_4bpp.Location = new System.Drawing.Point(26, 112);
+      this.rb_bgr_4bpp.Name = "rb_bgr_4bpp";
+      this.rb_bgr_4bpp.Size = new System.Drawing.Size(67, 17);
+      this.rb_bgr_4bpp.TabIndex = 3;
+      this.rb_bgr_4bpp.Text = "bgr 4bpp";
+      this.rb_bgr_4bpp.UseVisualStyleBackColor = true;
       // 
       // frmMain
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(719, 561);
+      this.ClientSize = new System.Drawing.Size(1022, 561);
       this.Controls.Add(this.horizontalContainer);
       this.Controls.Add(this.menuMain);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -364,6 +459,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.verticalContainer)).EndInit();
       this.verticalContainer.ResumeLayout(false);
       this.grpPalette.ResumeLayout(false);
+      this.grpPaletteMode.ResumeLayout(false);
+      this.grpPaletteMode.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -374,7 +471,6 @@
         private System.Windows.Forms.OpenFileDialog ofdPalette;
         private System.Windows.Forms.OpenFileDialog ofdSprite;
         private System.ComponentModel.BackgroundWorker bgLoadSprite;
-        private System.ComponentModel.BackgroundWorker bgLoadPalette;
         private System.Windows.Forms.GroupBox grpHexInfomation;
         private System.Windows.Forms.Label lblSpriteTotalDataBytes;
         private System.Windows.Forms.Label lblSpriteWidthByte;
@@ -398,8 +494,17 @@
     private System.Windows.Forms.SplitContainer verticalContainer;
     private System.Windows.Forms.GroupBox grpPalette;
     private System.Windows.Forms.Panel panelPalette;
-    private System.Windows.Forms.ToolStripMenuItem oldPaletteMethodToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem newPaletteMethodToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem bgr3bppPaletteMethodToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem rgb4bppMethodToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem defaultPaletteToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem reloadSpriteToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem rgb3bppMethodToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem bgr4bppMethodToolStripMenuItem;
+    private System.Windows.Forms.GroupBox grpPaletteMode;
+    private System.Windows.Forms.RadioButton rb_bgr_4bpp;
+    private System.Windows.Forms.RadioButton rb_rgb_4bpp;
+    private System.Windows.Forms.RadioButton rb_rgb_3bpp;
+    private System.Windows.Forms.RadioButton rb_bgr_3bpp;
   }
 }
 
