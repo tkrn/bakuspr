@@ -14,7 +14,7 @@ Please download a Windows .NET 4.0 compiled binary at https://github.com/tkrn/ba
 
 #### Screenshots
 
-[![bakuspr Screenshot](2025-12-11_15-53-45.png)](2025-12-11_15-53-45.png)
+[![bakuspr Screenshot](.github/2025-12-11_15-53-45.png)](.github/2025-12-11_15-53-45.png)
 
 #### Technical / Background Information
 Thanks to xdaniel on The Cutting Room Floor (tcrf.net) message boards to help reverse engineer the sprite files. With that being said, this is what I've learned about the Baku Baku Animal PC sprite files. The first two bytes are the width, and the following two bytes are the height. You multiply the width and the height to get the data image length. 
