@@ -51,8 +51,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>baku.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -130,6 +129,7 @@
     <None Include="Resources\bakubakulogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="baku.ico" />
     <Content Include="Resources\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>
