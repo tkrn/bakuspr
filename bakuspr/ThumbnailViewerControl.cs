@@ -1,21 +1,4 @@
-﻿//    bakuspr - A utility to extract sprites from Baku Baku Animal for PC
-//
-//    Copyright (C) 2018-2019 tkrn
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +10,8 @@ using bakuspr;
 
 namespace ThumbnailViewer
 {
-    public class ThumbnailViewerControl : FlowLayoutPanel
+
+  public class ThumbnailViewerControl : FlowLayoutPanel
     {
         /// <summary> Added Image will be stored in this List
         /// </summary>
@@ -237,15 +221,6 @@ namespace ThumbnailViewer
 
             frmMain parentForm = (this.Parent.Parent.Parent as frmMain);
 
-            if (selected.Count == 0) {
-                ClearSpriteTextLabeles();
-                parentForm.SaveButtonSetText("Save All");
-            } else if (selected.Count == 1) {
-                parentForm.SaveButtonSetText("Save Selected");
-            } else if (selected.Count > 1) {
-                ClearSpriteTextLabeles();
-                parentForm.SaveButtonSetText("Save Selected");
-            }
 
         }
 
@@ -295,5 +270,16 @@ namespace ThumbnailViewer
 
             selection = new Rectangle(x, y, width, height);
         }
+
+    private void InitializeComponent()
+    {
+      this.SuspendLayout();
+      // 
+      // ThumbnailViewerControl
+      // 
+      this.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ResumeLayout(false);
+
     }
+  }
 }

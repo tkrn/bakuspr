@@ -117,40 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ofdPalette.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
+  <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
   </metadata>
-  <metadata name="ofdSprite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>248, 17</value>
-  </metadata>
-  <metadata name="bgLoadSprite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>367, 17</value>
-  </metadata>
-  <metadata name="sfdSprite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>670, 17</value>
-  </metadata>
-  <metadata name="fbdSprites.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>787, 17</value>
-  </metadata>
-  <metadata name="menuMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>894, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAICAQAAAABADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAwMDAAICAgAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
-        AAD///8AAAAAAAAAAAAAAAAAAAAAAAhwh3d3iIiIiIiIiIAHeIAIdwd4iIAAAAAAAACIAAeACPcHeIAI
-        iIiIiIgACICAgAh3AIgIeIiIiIiHiAAAiIAI9wiAgAePj4+PeACACIiACPB4CADwiIiIiIDwCAiIgAj3
-        iAgH8Hj4+Phw9wgAiIAI+AAIB/D4eHh48PcIAIiACPgAAIeAAAAAAACHgAAIgAhwAIgACIiIiIiIAAiA
-        AIAIgAh3d3d4iIiHd3d3iACACICHf/93d4AId3//93gAgAgAh/f/93gAAId//394AIAIAIf///dwAAAI
-        f///eACACACH+P93gAAACHf/j3gAgAgAiHd3eIAAAAiHd3eIAIAIgAiIiIiIiIiIiIiIgAiACHgAgH/w
-        B///cA/3CACIgAhwAIh/8Af//3AP94gACIAI8AgIf/gH//9wj/eAgAiACPAICH//93/3f//3gIAIgAj4
-        gAiH//d3d3//eIAIh4AI94CAiHd4h3iHd4gICHeACPd4AACHeIiIh3gAAId3gAj3eAAId4eACHeHgACH
-        cIAI93cACH+HgAh/h4AAdwiACPd3cHh/9wAAf/eHB3CHgAj3d3d4h3gAAId4h3dwd4AI//f3d4iHgAh4
-        iHd3gHeACHd3d3d3d3d3d3d3iAB3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-</value>
-  </data>
 </root>
